@@ -18,10 +18,12 @@ public class geocoding {
             int name;
             String key = null;
 
-            //Create a key file and read the file.
+            //Read the key file for the key.
             try (BufferedReader reader = new BufferedReader(new FileReader("key.txt"))){
                 key = reader.readLine();
                 System.out.println(key);
+
+            //Handle Exception errors.
             }catch (Exception ioe){
                 System.out.println("No key file found, or could not read key. Please verify key.txt present");
                 System.exit(-1);
@@ -33,14 +35,19 @@ public class geocoding {
             String myaddr = addr.nextLine();
 
             GeocodingResult results[] = GeocodingApi.geocode(context, myaddr).await();
+
+            //Index and print out all the results.
             for(int x = 0;x<results.length;x++){
                 System.out.println(x+": "+ results[x].formattedAddress);
             }
+
             name = addr.nextInt();
             LatLng r = (results[name].geometry.location);
 
             ElevationResult[] t = ElevationApi.getByPoints(context,r).await();
 
+            //If say you input the city Hudson and get more than one, enter
+            // the index of the city you want and get elevation of that city.
             if (results.length >= 1){
                 ElevationResult Elevation = t[0];
                 System.out.println(String.format("The elevation of " + results[name].formattedAddress +
